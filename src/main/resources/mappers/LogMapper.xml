@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace后面写的是这个映射文件对应接口的包和接口名-->
+<mapper namespace="com.example.exercise.mapper.LogMapper">
+    <resultMap id="logResultMap" type="com.example.exercise.domain.Log">
+        <id property="id" column="id"/>
+        <result property="loginTime" column="login_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler"/>
+        <association property="user" column="email" javaType="com.example.exercise.domain.User" jdbcType="VARCHAR">
+            <id property="email" column="email"/>
+            <result property="password" column="password"/>
+            <result property="loginCount" column="login_count"/>
+            <result property="lastLoginTime" column="last_login_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler"/>
+        </association>
+    </resultMap>
+    <!--    int save(User user);-->
+    <!--    int update(String email, LocalDateTime lastLoginTime);-->
+    <!--    User findByEmailAndPassword(String email, String password);-->
+    <!--    String findEmail(String email);-->
+    <insert id="save" parameterType="com.example.exercise.domain.Log">
+        insert into logs( email,login_time)  values (email = #{user.email}, login_time=#{loginTime})
+    </insert>
+
+
+    <select id="findByEmail" parameterType="java.lang.String" resultMap="logResultMap">
+        select id, login_time, email from logs where email=#{email}
+    </select>
+
+
+</mapper>
